@@ -1,0 +1,23 @@
+{
+  "name": "procreate-ingest",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/ingest.ts",
+    "dev": "tsx watch src/ingest.ts",
+    "analyze-colors": "tsx src/cli/analyze-colors.ts",
+    "recompute-color-tags": "tsx src/cli/recompute-color-tags.ts",
+    "recompute-similarities": "tsx src/cli/recompute-similarities.ts"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "dotenv": "^17.2.3",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.19.4",
+    "typescript": "^5"
+  }
+}

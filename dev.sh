@@ -1,0 +1,1 @@
+npx concurrently --names "ui,ingest" --prefix-colors "blue,green" "cd ui && pnpm install && pnpm dev" "cd ingest && pnpm install && pnpm dev" 

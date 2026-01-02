@@ -1,0 +1,37 @@
+services:
+  ui:
+    container_name: procreate_ui
+    build:
+      context: ./ui
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./media/procreate:/app/media/procreate:ro
+      - ./media/thumbnails:/app/media/thumbnails:ro
+      - ./db:/app/db
+    environment:
+      - NODE_ENV=production
+      - PROCREATE_DATABASE_PATH=/app/db/procreate.db
+      - PROCREATE_SOURCE_PATH=/app/media/procreate
+      - PROCREATE_THUMBNAIL_PATH=/app/media/thumbnails
+    depends_on:
+      - ingest
+    restart: unless-stopped
+
+  ingest:
+    container_name: procreate_ingest
+    build:
+      context: ./ingest
+    volumes:
+      - ./media/procreate:/app/media/procreate
+      - ./media/thumbnails:/app/media/thumbnails
+      - ./db:/app/db
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PROCREATE_DATABASE_PATH=/app/db/procreate.db
+      - PROCREATE_SOURCE_PATH=/app/media/procreate
+      - PROCREATE_THUMBNAIL_PATH=/app/media/thumbnails
+      - AUTO_COLOR_TAG=${AUTO_COLOR_TAG:-true}
+      - AUTO_COLOR_TAG_LIMIT=${AUTO_COLOR_TAG_LIMIT:-4}
+      - AUTO_COLOR_TAG_THRESHOLD=${AUTO_COLOR_TAG_THRESHOLD:-2}
+    restart: unless-stopped
