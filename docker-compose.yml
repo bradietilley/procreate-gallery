@@ -1,13 +1,15 @@
 services:
-  ui:
+  procreate_ui:
     container_name: procreate_ui
-    build:
-      context: ./ui
+    image: ghcr.io/bradietilley/procreate-gallery-ui:latest
     ports:
       - "3000:3000"
     volumes:
+      # Your .procreate files (read-only)
       - ./media/procreate:/app/media/procreate:ro
+      # Extracted thumbnails (read-only for UI)
       - ./media/thumbnails:/app/media/thumbnails:ro
+      # SQLite database
       - ./db:/app/db
     environment:
       - NODE_ENV=production
@@ -18,13 +20,15 @@ services:
       - ingest
     restart: unless-stopped
 
-  ingest:
+  procreate_ingest:
     container_name: procreate_ingest
-    build:
-      context: ./ingest
+    image: ghcr.io/bradietilley/procreate-gallery-ingest:latest
     volumes:
+      # Your .procreate files (read-write for scanning)
       - ./media/procreate:/app/media/procreate
+      # Extracted thumbnails (read-write for ingest)
       - ./media/thumbnails:/app/media/thumbnails
+      # SQLite database
       - ./db:/app/db
     environment:
       - PYTHONUNBUFFERED=1
